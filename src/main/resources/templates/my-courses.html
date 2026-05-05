@@ -23,10 +23,25 @@
     <main>
         <section class="my-courses">
             <h2>My Courses</h2>
-            <div id="enrolled-courses" class="course-grid">
-                <!-- Enrolled courses will be populated by JavaScript -->
+            <div id="enrolled-courses" class="course-grid" th:if="${!enrollments.empty}">
+                <div th:each="enrollment : ${enrollments}" class="course-card" th:data-title="${enrollment.course.title}">
+                    <div class="course-content">
+                        <h3 th:text="${enrollment.course.title}"></h3>
+                        <p th:text="${enrollment.course.description}"></p>
+                        <div class="course-meta">
+                            <span>⏱ <span th:text="${enrollment.course.duration}"></span> hrs</span>
+                            <span>👨‍🏫 <span th:text="${enrollment.course.instructor}"></span></span>
+                        </div>
+                        
+                        <div th:class="${enrollment.progressPercentage == 100 ? 'course-progress progress-complete' : 'course-progress progress-incomplete'}" 
+                             th:text="${enrollment.progressPercentage} + '% Complete'">
+                        </div>
+
+                        <a th:href="@{/course/{id}(id=${enrollment.course.id})}" class="btn">Continue Learning</a>
+                    </div>
+                </div>
             </div>
-            <div id="no-courses" class="no-courses-message" style="display: none;">
+            <div id="no-courses" class="no-courses-message" th:if="${enrollments.empty}">
                 <p>You haven't enrolled in any courses yet.</p>
                 <a href="/courses" class="btn">Browse Courses</a>
             </div>

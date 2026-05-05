@@ -57,12 +57,14 @@ public class CourseController {
     }
 
     @GetMapping("/my-courses")
-    public String myCourses(Model model) {
-        // In a real application, this would get enrolled courses from the user's
-        // session/database
-        // For now, we'll pass all courses and let JavaScript filter based on
-        // localStorage
-        model.addAttribute("allCourses", courseRepository.findAll());
-        return "my-courses";
+    public String myCourses(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId != null) {
+            List<CourseEnrollment> enrollments = enrollmentRepository.findByUserId(userId);
+            model.addAttribute("enrollments", enrollments);
+            return "my-courses";
+        } else {
+            return "redirect:/login";
+        }
     }
 }

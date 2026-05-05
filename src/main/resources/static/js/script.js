@@ -30,14 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Update My Courses link text
-    updateMyCoursesLink();
-
-    // Initialize My Courses page
-    if (document.getElementById('enrolled-courses')) {
-        loadMyCourses();
-    }
-
     // Initialize course detail page
     if (document.getElementById('lessons-section')) {
         const courseDetail = document.querySelector('.course-detail');
@@ -48,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const completedLessonsStr = courseDetail?.getAttribute('data-completed-lessons') || '[]';
         const isEnrolledOnBackend = backendProgress > 0 || completedLessonsStr !== '[]';
         
-        if (courseId && (isEnrolled(courseId) || isEnrolledOnBackend)) {
+        if (courseId && isEnrolledOnBackend) {
             showLessonsSection(courseId);
         }
     }
@@ -111,84 +103,32 @@ function showToast(message, type = 'info') {
 }
 
 function enrollInCourse(courseId) {
-    let enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses')) || [];
-    if (!enrolledCourses.includes(courseId)) {
-        enrolledCourses.push(courseId);
-        localStorage.setItem('enrolledCourses', JSON.stringify(enrolledCourses));
-        showToast('Successfully enrolled in the course!', 'success');
-        updateMyCoursesLink();
-
-        // Show lessons section if on course detail page
-        if (document.getElementById('lessons-section')) {
-            showLessonsSection(courseId);
-        }
-    } else {
-        showToast('You are already enrolled in this course.', 'info');
-    }
-}
-
-function isEnrolled(courseId) {
-    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses')) || [];
-    return enrolledCourses.includes(courseId);
-}
-
-function updateMyCoursesLink() {
-    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses')) || [];
-    const myCoursesLink = document.getElementById('my-courses-link');
-    if (myCoursesLink) {
-        myCoursesLink.textContent = `My Courses (${enrolledCourses.length})`;
-    }
-}
-
-function loadMyCourses() {
-    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses')) || [];
-    const enrolledCoursesDiv = document.getElementById('enrolled-courses');
-    const noCoursesDiv = document.getElementById('no-courses');
-
-    if (enrolledCourses.length === 0) {
-        enrolledCoursesDiv.innerHTML = '';
-        noCoursesDiv.style.display = 'block';
-        return;
-    }
-
-    noCoursesDiv.style.display = 'none';
-
-    // In a real app, this would fetch course data from the server
-    // For now, we'll use a mock approach - assume courses are available globally
-    fetch('/courses')
-        .then(response => response.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const courseCards = doc.querySelectorAll('.course-card');
-
-            enrolledCoursesDiv.innerHTML = '';
-
-            courseCards.forEach(card => {
-                const courseId = card.querySelector('.btn')?.getAttribute('href')?.split('/').pop();
-                if (courseId && enrolledCourses.includes(courseId)) {
-                    const progress = getCourseProgress(courseId);
-                    const progressDiv = document.createElement('div');
-                    progressDiv.className = `course-progress ${progress === 100 ? 'progress-complete' : 'progress-incomplete'}`;
-                    progressDiv.textContent = `${progress}% Complete`;
-
-                    card.appendChild(progressDiv);
-                    card.querySelector('.btn').textContent = 'Continue Learning';
-                    card.querySelector('.btn').onclick = (e) => {
-                        e.preventDefault();
-                        showCourseProgress(courseId);
-                    };
-
-                    enrolledCoursesDiv.appendChild(card);
+    fetch(`/api/progress/update?courseId=${courseId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).then(response => {
+        if (response.ok) {
+            showToast('Successfully enrolled in the course!', 'success');
+            // Show lessons section if on course detail page
+            if (document.getElementById('lessons-section')) {
+                // Set fake data so the UI doesn't crash before refresh
+                const courseDetail = document.querySelector('.course-detail');
+                if (courseDetail) {
+                    courseDetail.setAttribute('data-completed-lessons', '[]');
+                    courseDetail.setAttribute('data-backend-progress', '0');
                 }
-            });
-        })
-        .catch(error => {
-            console.error('Error loading courses:', error);
-            // Fallback: show enrolled course IDs
-            enrolledCoursesDiv.innerHTML = `<p>Enrolled courses: ${enrolledCourses.join(', ')}</p>`;
-        });
+                showLessonsSection(courseId);
+            }
+        } else {
+            showToast('Failed to enroll. Please try logging in again.', 'info');
+        }
+    }).catch(err => {
+        console.error(err);
+        showToast('Error enrolling in course.', 'info');
+    });
 }
+
+// loadMyCourses removed as it's now handled entirely by the backend and Thymeleaf
 
 function showLessonsSection(courseId) {
     const lessonsSection = document.getElementById('lessons-section');
@@ -281,18 +221,7 @@ function updateCourseProgress(courseId) {
     }
 }
 
-function getCourseProgress(courseId) {
-    const mockLessonCounts = { '1': 4, '2': 4, '3': 4, '4': 4 };
-    const totalLessons = mockLessonCounts[courseId] || 4;
-    const completedLessons = JSON.parse(localStorage.getItem(`completedLessons_${courseId}`)) || [];
-    return Math.round((completedLessons.length / totalLessons) * 100);
-}
-
-function showCourseProgress(courseId) {
-    // This would show the modal with course progress
-    // For now, redirect to course detail page
-    window.location.href = `/course/${courseId}`;
-}
+// Deprecated mock progress functions removed
 
 function markLessonViewed(courseId, lessonId) {
     const courseDetail = document.querySelector('.course-detail');
