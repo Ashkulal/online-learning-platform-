@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${course.title} + ' - Online Learning Platform'">Course Detail</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <header>
+        <h1>Online Learning Platform</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/courses">All Courses</a>
+            <a href="/my-courses" id="my-courses-link" th:if="${session.userId != null}">My Courses</a>
+            <a href="/admin/dashboard" th:if="${session.role == 'ADMIN'}">Admin Panel</a>
+            <a href="/login" th:if="${session.userId == null}">Login/Signup</a>
+            <a href="/logout" th:if="${session.userId != null}">Logout (<span th:text="${session.username}"></span>)</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="course-detail" th:data-course-topic="${course.title}"
+                 th:data-backend-progress="${enrollment != null ? enrollment.progressPercentage : 0}"
+                 th:data-completed-lessons="${completedLessonsStr != null ? completedLessonsStr : '[]'}">
+            <h2 th:text="${course.title}"></h2>
+            <p th:text="${course.description}"></p>
+            <p>Duration: <span th:text="${course.duration}"></span> hours</p>
+            <p>Instructor: <span th:text="${course.instructor}"></span></p>
+
+            <button id="enroll-btn" class="btn enroll-btn" th:data-course-id="${course.id}">Enroll Now</button>
+
+            <!-- Lessons section - only show if enrolled -->
+            <div id="lessons-section" class="lessons-section" style="display: none;">
+                <h3>Course Lessons</h3>
+                <div class="progress-bar">
+                    <div id="course-progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="progress-text-container">
+                    <span>Progress</span>
+                    <span id="course-progress-text" style="display:block; margin-bottom: 1rem;">0% Complete</span>
+                    <a id="claim-certificate-btn" th:href="@{/certificate/{id}(id=${course.id})}" class="btn" style="display: none; background: #16a34a;">🏆 Claim Certificate</a>
+                </div>
+                <div id="lessons-list" class="lessons-list">
+                    <div th:each="lesson : ${course.lessons}" class="lesson-item"
+                         th:data-course-id="${course.id}"
+                         th:data-lesson-id="${lesson.id}"
+                         th:data-youtube-id="${lesson.youtubeVideoId}"
+                         th:data-title="${lesson.title}"
+                         th:data-description="${lesson.description}">
+                        <div class="lesson-info">
+                            <div class="lesson-title" th:text="${lesson.title}"></div>
+                            <div class="lesson-description" th:text="${lesson.description}"></div>
+                            <div class="lesson-duration" th:text="${lesson.duration} + ' minutes'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Small video player that appears when clicking lessons -->
+                <div id="video-player-panel" class="video-player-panel" style="display: none;">
+                    <div class="video-player-column">
+                        <div class="video-container">
+                            <div id="youtube-video"></div>
+                        </div>
+                        <div class="video-progress-bar">
+                            <div id="video-progress-fill" class="video-progress-fill"></div>
+                        </div>
+                        <div class="progress-text-container">
+                            <span id="video-progress-text" class="video-progress-text">0% Watched</span>
+                        </div>
+                    </div>
+                    <div class="video-player-info">
+                        <h3 id="video-lesson-title"></h3>
+                        <div class="video-description" id="video-description"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Online Learning Platform</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

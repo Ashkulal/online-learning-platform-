@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Completion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            flex-direction: column;
+        }
+
+        .certificate-wrapper {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .certificate-container {
+            width: 850px;
+            height: 600px;
+            border: 2px solid #d4af37;
+            padding: 10px;
+            position: relative;
+            background: #fff;
+            box-sizing: border-box;
+        }
+
+        .certificate-inner {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #d4af37;
+            padding: 3rem;
+            position: relative;
+            background-image: radial-gradient(circle at center, #ffffff 40%, #fdfbf7 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* Gold corner accents */
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid transparent;
+        }
+        .corner-tl { top: 10px; left: 10px; border-top-color: #d4af37; border-left-color: #d4af37; }
+        .corner-tr { top: 10px; right: 10px; border-top-color: #d4af37; border-right-color: #d4af37; }
+        .corner-bl { bottom: 10px; left: 10px; border-bottom-color: #d4af37; border-left-color: #d4af37; }
+        .corner-br { bottom: 10px; right: 10px; border-bottom-color: #d4af37; border-right-color: #d4af37; }
+
+        .cert-header {
+            font-family: 'Cinzel', serif;
+            font-size: 3.2rem;
+            color: #0f172a;
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .cert-subheader {
+            color: #d4af37;
+            font-size: 1.1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+        }
+
+        .cert-text {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .student-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem;
+            color: #0f172a;
+            margin: 1rem 0 2rem 0;
+            line-height: 1;
+        }
+
+        .course-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: #0f172a;
+            font-weight: 700;
+            margin: 1rem 0 2.5rem 0;
+            padding: 0 4rem;
+        }
+
+        .cert-footer {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: auto;
+            padding: 0 3rem;
+            box-sizing: border-box;
+            align-items: flex-end;
+        }
+
+        .signature-block {
+            text-align: center;
+            width: 220px;
+        }
+
+        .signature-line {
+            width: 100%;
+            border-bottom: 1px solid #94a3b8;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .signature-font {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            color: #0f172a;
+            height: 40px;
+        }
+
+        .signature-name {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        .signature-title {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        .seal {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: #d4af37;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
+            border: 2px dashed #fff;
+            outline: 2px solid #d4af37;
+            outline-offset: -6px;
+        }
+        
+        .seal-inner {
+            font-family: 'Cinzel', serif;
+            color: white;
+            font-size: 0.7rem;
+            text-align: center;
+            line-height: 1.2;
+            font-weight: bold;
+        }
+
+        .cert-id {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-align: right;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #0f172a;
+            color: #d4af37;
+            border: 1px solid #0f172a;
+        }
+
+        .btn-primary:hover {
+            background: #1e293b;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+        }
+
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+            }
+            .certificate-wrapper {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            .action-buttons {
+                display: none !important;
+            }
+            @page {
+                size: landscape;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="certificate-wrapper">
+        <div class="certificate-container" id="certificate">
+            <div class="certificate-inner">
+                <div class="corner corner-tl"></div>
+                <div class="corner corner-tr"></div>
+                <div class="corner corner-bl"></div>
+                <div class="corner corner-br"></div>
+
+                <div class="cert-id">
+                    ID: <span th:text="${certificateId}">12345678-1234-1234-1234-123456789012</span><br>
+                    Verify at learningplatform.com
+                </div>
+
+                <div class="cert-header">Certificate of Completion</div>
+                <div class="cert-subheader">This is to proudly certify that</div>
+                
+                <div class="student-name" th:text="${studentName}">John Doe</div>
+                
+                <div class="cert-text">has successfully completed the comprehensive online program</div>
+                <div class="course-title" th:text="${courseTitle}">Introduction to Advanced Java</div>
+                
+                <div class="seal">
+                    <div class="seal-inner">CERTIFIED<br>EXCELLENCE</div>
+                </div>
+                
+                <div class="cert-footer">
+                    <div class="signature-block">
+                        <div class="signature-line">
+                            <span class="signature-font" th:text="${dateCompleted}">May 05, 2026</span>
+                        </div>
+                        <div class="signature-name">Issued On</div>
+                        <div class="signature-title">Official Date</div>
+                    </div>
+                    <div class="signature-block">
+                        <div class="signature-line">
+                            <span class="signature-font" th:text="${instructorName}">Jane Smith</span>
+                        </div>
+                        <div class="signature-name" th:text="${instructorName}">Jane Smith</div>
+                        <div class="signature-title">Course Instructor</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button onclick="window.print()" class="btn btn-primary">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            Print & Download
+        </button>
+        <a th:href="@{/course/{id}(id=${courseId})}" class="btn btn-secondary">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Course
+        </a>
+    </div>
+
+</body>
+</html>

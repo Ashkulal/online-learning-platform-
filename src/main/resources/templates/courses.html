@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Courses - Online Learning Platform</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <header>
+        <h1>Online Learning Platform</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/courses">All Courses</a>
+            <a href="/my-courses" id="my-courses-link" th:if="${session.userId != null}">My Courses</a>
+            <a href="/admin/dashboard" th:if="${session.role == 'ADMIN'}">Admin Panel</a>
+            <a href="/login" th:if="${session.userId == null}">Login/Signup</a>
+            <a href="/logout" th:if="${session.userId != null}">Logout (<span th:text="${session.username}"></span>)</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="courses-list">
+            <h2>All Courses</h2>
+            
+            <div class="search-filter-container">
+                <input type="text" id="course-search" class="search-input" placeholder="Search courses by title, description or instructor...">
+            </div>
+
+            <div class="course-grid" id="course-grid-container" th:each="course : ${courses}">
+                <div class="course-card" th:data-title="${course.title}" th:data-description="${course.description}" th:data-instructor="${course.instructor}">
+                    <h3 th:text="${course.title}"></h3>
+                    <p class="course-desc" th:text="${course.description}"></p>
+                    <div class="course-meta">
+                        <span><i class="duration-icon"></i> <span th:text="${course.duration}"></span> hours</span>
+                        <span><i class="instructor-icon"></i> <span th:text="${course.instructor}"></span></span>
+                    </div>
+                    <a th:href="@{/course/{id}(id=${course.id})}" class="btn">View Details</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Online Learning Platform</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

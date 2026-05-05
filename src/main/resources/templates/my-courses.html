@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses - Online Learning Platform</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <header>
+        <h1>Online Learning Platform</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/courses">All Courses</a>
+            <a href="/my-courses" id="my-courses-link" th:if="${session.userId != null}">My Courses</a>
+            <a href="/admin/dashboard" th:if="${session.role == 'ADMIN'}">Admin Panel</a>
+            <a href="/login" th:if="${session.userId == null}">Login/Signup</a>
+            <a href="/logout" th:if="${session.userId != null}">Logout (<span th:text="${session.username}"></span>)</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="my-courses">
+            <h2>My Courses</h2>
+            <div id="enrolled-courses" class="course-grid">
+                <!-- Enrolled courses will be populated by JavaScript -->
+            </div>
+            <div id="no-courses" class="no-courses-message" style="display: none;">
+                <p>You haven't enrolled in any courses yet.</p>
+                <a href="/courses" class="btn">Browse Courses</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Course Progress Modal -->
+    <div id="progress-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modal-course-title"></h3>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+                <span id="progress-text" class="progress-text">0% Complete</span>
+            </div>
+            <div id="lessons-list" class="lessons-list">
+                <!-- Lessons will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Online Learning Platform</p>
+    </footer>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>
