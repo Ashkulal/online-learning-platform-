@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: learning-platform
+    env: docker
+    plan: free
+    region: ohio
