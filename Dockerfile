@@ -2,9 +2,6 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
-# Copy the wrapper if it exists
-COPY mvnw .
-COPY .mvn .mvn
 COPY src ./src
 # Build the application
 RUN mvn clean package -DskipTests
