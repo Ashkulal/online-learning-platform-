@@ -9,8 +9,3 @@ This platform allows users to browse courses, enroll as students, and track thei
 * **Backend**: Java, Spring Boot
 * **Frontend**: HTML, CSS, Thymeleaf
 * **Database**: H2 (default local database)
-
-## Quick Start
-1. Clone the repository.
-2. Run `./mvnw spring-boot:run` (or `mvnw.cmd spring-boot:run` on Windows) in your terminal to start the application.
-3. Open `http://localhost:9090` in your browser.
