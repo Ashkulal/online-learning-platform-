@@ -11,3 +11,7 @@ This platform allows users to browse courses, enroll as students, and track thei
 * **Backend**: Java, Spring Boot
 * **Frontend**: HTML, CSS, Thymeleaf
 * **Database**: H2 (default local database)
+
+## Credits / Authors
+* **Akash H R** (USN: 4cb22cs006)
+* **Bhavith** (USN: 4cb22cb014)
