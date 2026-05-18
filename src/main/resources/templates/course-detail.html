@@ -23,7 +23,8 @@
     <main>
         <section class="course-detail" th:data-course-topic="${course.title}"
                  th:data-backend-progress="${enrollment != null ? enrollment.progressPercentage : 0}"
-                 th:data-completed-lessons="${completedLessonsStr != null ? completedLessonsStr : '[]'}">
+                 th:data-completed-lessons="${completedLessonsStr != null ? completedLessonsStr : '[]'}"
+                 th:data-is-enrolled="${enrollment != null ? 'true' : 'false'}">
             <h2 th:text="${course.title}"></h2>
             <p th:text="${course.description}"></p>
             <p>Duration: <span th:text="${course.duration}"></span> hours</p>

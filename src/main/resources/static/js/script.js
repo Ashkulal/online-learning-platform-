@@ -35,10 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const courseDetail = document.querySelector('.course-detail');
         const courseId = document.getElementById('enroll-btn')?.getAttribute('data-course-id');
         
-        // Check if enrolled on backend by checking if completed-lessons exists and isn't empty, or if backend-progress > 0
-        const backendProgress = parseInt(courseDetail?.getAttribute('data-backend-progress') || '0');
-        const completedLessonsStr = courseDetail?.getAttribute('data-completed-lessons') || '[]';
-        const isEnrolledOnBackend = backendProgress > 0 || completedLessonsStr !== '[]';
+        // Check if enrolled on backend
+        const isEnrolledOnBackend = courseDetail?.getAttribute('data-is-enrolled') === 'true';
+
         
         if (courseId && isEnrolledOnBackend) {
             showLessonsSection(courseId);
@@ -188,7 +187,7 @@ function toggleLessonCompletion(courseId, lessonId, completed) {
 
 function updateCourseProgress(courseId) {
     const lessonItems = document.querySelectorAll('.lesson-item');
-    const totalLessons = lessonItems.length || 4; 
+    const totalLessons = lessonItems.length; 
     let completedCount = 0;
     
     // Update lesson items visually based on backend data initially
