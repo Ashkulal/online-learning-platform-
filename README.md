@@ -17,12 +17,18 @@ This platform allows users to browse courses, enroll as students, and track thei
 The application uses MongoDB for users, courses, and enrollments. For local
 development, it connects to `mongodb://localhost:27017/learningplatform` by
 default. Set `SPRING_DATA_MONGODB_URI` to a MongoDB Atlas connection URI when
-using Atlas or deploying to Render.
+using Atlas or deploying to Render. The URI must include a database name in its
+path, for example
+`mongodb+srv://<user>:<password>@<cluster>.mongodb.net/learningplatform?retryWrites=true&w=majority`.
 
 In Render, set `SPRING_DATA_MONGODB_URI` as a secret environment variable on the
 web service. Create a MongoDB database user and ensure the Atlas network access
-list allows connections from the deployed service. Keep the URI out of source
-control.
+list allows connections from the deployed service. If the Atlas-provided URI
+has an empty path (for example, it ends in `.mongodb.net/?...`), add the
+database name before the query string, such as
+`.mongodb.net/learningplatform?....` Keep the URI out of source control. If
+`SPRING_DATA_MONGODB_URI` is unset, the app falls back to the local
+`learningplatform` database URI.
 
 Existing H2 data is not migrated automatically; users and courses must be
 re-created in MongoDB or migrated separately.
