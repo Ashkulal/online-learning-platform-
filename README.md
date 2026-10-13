@@ -30,3 +30,8 @@ re-created in MongoDB or migrated separately.
 ## Credits / Authors
 * **Akash H R** (USN: 4cb22cs006)
 * **Bhavith** (USN: 4cb22cb014)
+
+## Local Development Notes
+
+- Java 21 recommended
+- Run with .\mvnw.cmd spring-boot:run`n- Set SPRING_DATA_MONGODB_URI for Atlas or run MongoDB locally
