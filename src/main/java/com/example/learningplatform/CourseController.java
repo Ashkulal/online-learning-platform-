@@ -36,12 +36,12 @@ public class CourseController {
     }
 
     @GetMapping("/course/{id}")
-    public String courseDetail(@PathVariable Long id, HttpSession session, Model model) {
+    public String courseDetail(@PathVariable String id, HttpSession session, Model model) {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
             model.addAttribute("course", course.get());
             
-            Long userId = (Long) session.getAttribute("userId");
+            String userId = (String) session.getAttribute("userId");
             if (userId != null) {
                 Optional<CourseEnrollment> enrollment = enrollmentRepository.findByUserIdAndCourseId(userId, id);
                 if (enrollment.isPresent()) {
@@ -52,13 +52,13 @@ public class CourseController {
             
             return "course-detail";
         } else {
-            return "error"; // You might want to create an error page
+            return "redirect:/courses";
         }
     }
 
     @GetMapping("/my-courses")
     public String myCourses(HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("userId");
+        String userId = (String) session.getAttribute("userId");
         if (userId != null) {
             List<CourseEnrollment> enrollments = enrollmentRepository.findByUserId(userId);
             model.addAttribute("enrollments", enrollments);

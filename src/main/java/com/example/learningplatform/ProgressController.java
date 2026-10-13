@@ -21,10 +21,10 @@ public class ProgressController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> updateProgress(@RequestParam Long courseId, 
-                                            @RequestParam(required = false) Long lessonId, 
+    public ResponseEntity<?> updateProgress(@RequestParam String courseId,
+                                            @RequestParam(required = false) String lessonId,
                                             HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
+        String userId = (String) session.getAttribute("userId");
         if (userId == null) {
             return ResponseEntity.status(401).body("Unauthorized");
         }

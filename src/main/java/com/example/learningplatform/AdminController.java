@@ -52,7 +52,11 @@ public class AdminController {
                 existingCourse.setInstructor(course.getInstructor());
                 existingCourse.setDuration(course.getDuration());
                 existingCourse.setFeatured(course.isFeatured());
-                courseRepository.save(existingCourse);
+                Course savedCourse = courseRepository.save(existingCourse);
+                for (CourseEnrollment enrollment : enrollmentRepository.findByCourseId(savedCourse.getId())) {
+                    enrollment.setCourse(savedCourse);
+                    enrollmentRepository.save(enrollment);
+                }
                 return "redirect:/admin/dashboard?success=updated";
             }
         }
@@ -62,7 +66,7 @@ public class AdminController {
     }
 
     @GetMapping("/course/edit/{id}")
-    public String showEditCourseForm(@PathVariable Long id, HttpSession session, Model model) {
+    public String showEditCourseForm(@PathVariable String id, HttpSession session, Model model) {
         if (!isAdmin(session)) return "redirect:/login";
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
@@ -73,8 +77,9 @@ public class AdminController {
     }
 
     @PostMapping("/course/delete/{id}")
-    public String deleteCourse(@PathVariable Long id, HttpSession session) {
+    public String deleteCourse(@PathVariable String id, HttpSession session) {
         if (!isAdmin(session)) return "redirect:/login";
+        enrollmentRepository.deleteAll(enrollmentRepository.findByCourseId(id));
         courseRepository.deleteById(id);
         return "redirect:/admin/dashboard?success=deleted";
     }

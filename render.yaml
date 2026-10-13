@@ -5,14 +5,5 @@ services:
     plan: free
     region: ohio
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: learning-db
-          property: connectionString
-
-databases:
-  - name: learning-db
-    databaseName: learningplatform
-    user: admin
-    plan: free
-    region: ohio
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false

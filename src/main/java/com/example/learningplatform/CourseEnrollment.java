@@ -1,63 +1,68 @@
 package com.example.learningplatform;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "course_enrollments")
+@Document(collection = "course_enrollments")
+@CompoundIndex(name = "user_course_unique", def = "{'userId': 1, 'courseId': 1}", unique = true)
 public class CourseEnrollment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    private String id;
+    private String userId;
+    private String username;
+    private String courseId;
     private Course course;
-
-    @Column(nullable = false)
-    private int progressPercentage = 0;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "enrollment_completed_lessons", joinColumns = @JoinColumn(name = "enrollment_id"))
-    @Column(name = "lesson_id")
-    private List<Long> completedLessonIds = new ArrayList<>();
-
-    @Column(name = "certificate_id", unique = true)
+    private int progressPercentage;
+    private List<String> completedLessonIds = new ArrayList<>();
     private String certificateId;
-
-    @Column(name = "completion_date")
     private LocalDate completionDate;
 
     public CourseEnrollment() {
     }
 
     public CourseEnrollment(User user, Course course, int progressPercentage) {
-        this.user = user;
+        this.userId = user.getId();
+        this.username = user.getUsername();
+        this.courseId = course.getId();
         this.course = course;
         this.progressPercentage = progressPercentage;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     public Course getCourse() {
@@ -66,6 +71,9 @@ public class CourseEnrollment {
 
     public void setCourse(Course course) {
         this.course = course;
+        if (course != null) {
+            this.courseId = course.getId();
+        }
     }
 
     public int getProgressPercentage() {
@@ -76,11 +84,11 @@ public class CourseEnrollment {
         this.progressPercentage = progressPercentage;
     }
 
-    public List<Long> getCompletedLessonIds() {
+    public List<String> getCompletedLessonIds() {
         return completedLessonIds;
     }
 
-    public void setCompletedLessonIds(List<Long> completedLessonIds) {
+    public void setCompletedLessonIds(List<String> completedLessonIds) {
         this.completedLessonIds = completedLessonIds;
     }
 

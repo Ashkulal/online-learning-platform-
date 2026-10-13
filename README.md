@@ -10,7 +10,22 @@ This platform allows users to browse courses, enroll as students, and track thei
 ## Technologies Used
 * **Backend**: Java, Spring Boot
 * **Frontend**: HTML, CSS, Thymeleaf
-* **Database**: H2 (default local database)
+* **Database**: MongoDB
+
+## MongoDB configuration
+
+The application uses MongoDB for users, courses, and enrollments. For local
+development, it connects to `mongodb://localhost:27017/learningplatform` by
+default. Set `SPRING_DATA_MONGODB_URI` to a MongoDB Atlas connection URI when
+using Atlas or deploying to Render.
+
+In Render, set `SPRING_DATA_MONGODB_URI` as a secret environment variable on the
+web service. Create a MongoDB database user and ensure the Atlas network access
+list allows connections from the deployed service. Keep the URI out of source
+control.
+
+Existing H2 data is not migrated automatically; users and courses must be
+re-created in MongoDB or migrated separately.
 
 ## Credits / Authors
 * **Akash H R** (USN: 4cb22cs006)

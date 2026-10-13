@@ -1,25 +1,17 @@
 package com.example.learningplatform;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "lessons")
 public class Lesson {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String title;
-    @Column(length = 1000)
     private String description;
-    private int duration; // in minutes
-    private String content; // could be video URL or text content
-    private String youtubeVideoId; // YouTube video ID for embedded video
+    private int duration;
+    private String content;
+    private String youtubeVideoId;
 
-    // Constructors
     public Lesson() {
     }
 
-    public Lesson(Long id, String title, String description, int duration, String content) {
+    public Lesson(String id, String title, String description, int duration, String content) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -27,7 +19,7 @@ public class Lesson {
         this.content = content;
     }
 
-    public Lesson(Long id, String title, String description, int duration, String content, String youtubeVideoId) {
+    public Lesson(String id, String title, String description, int duration, String content, String youtubeVideoId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -44,12 +36,11 @@ public class Lesson {
         this.youtubeVideoId = youtubeVideoId;
     }
 
-    // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

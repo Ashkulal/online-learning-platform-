@@ -1,31 +1,26 @@
 package com.example.learningplatform;
 
-import jakarta.persistence.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.ArrayList;
 
-@Entity
-@Table(name = "courses")
+@Document(collection = "courses")
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String title;
-    @Column(length = 1000)
     private String description;
-    private int duration; // in hours
+    private int duration;
     private String instructor;
     private boolean featured;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "course_id")
     private List<Lesson> lessons = new ArrayList<>();
 
-    // Constructors
     public Course() {
     }
 
-    public Course(Long id, String title, String description, int duration, String instructor, boolean featured) {
+    public Course(String id, String title, String description, int duration, String instructor, boolean featured) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -42,12 +37,11 @@ public class Course {
         this.featured = featured;
     }
 
-    // Getters and Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -100,22 +94,23 @@ public class Course {
     }
 
     public void addLesson(Lesson lesson) {
+        if (lesson.getId() == null) {
+            lesson.setId(new ObjectId().toHexString());
+        }
         this.lessons.add(lesson);
     }
 
-    // Calculate progress percentage based on completed lessons
     public int getProgressPercentage() {
-        if (lessons.isEmpty())
+        if (lessons.isEmpty()) {
             return 0;
+        }
         long completedLessons = lessons.stream()
                 .filter(lesson -> isLessonCompleted(lesson.getId()))
                 .count();
         return (int) ((completedLessons * 100.0) / lessons.size());
     }
 
-    // Check if a lesson is completed (this would be stored in localStorage)
-    private boolean isLessonCompleted(Long lessonId) {
-        // This will be handled by JavaScript/localStorage
+    private boolean isLessonCompleted(String lessonId) {
         return false;
     }
 }

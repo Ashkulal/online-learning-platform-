@@ -1,8 +1,6 @@
 package com.example.learningplatform;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-@Repository
-public interface CourseRepository extends JpaRepository<Course, Long> {
+public interface CourseRepository extends MongoRepository<Course, String> {
 }

@@ -18,15 +18,15 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Create default admin user or ensure existing one has ADMIN role and correct password
+        String adminPassword = System.getenv().getOrDefault("ADMIN_PASSWORD", "9480");
+
         Optional<User> adminOpt = userRepository.findByUsername("admin");
         if (adminOpt.isEmpty()) {
-            User admin = new User("admin", "9480", "ADMIN");
+            User admin = new User("admin", adminPassword, "ADMIN");
             userRepository.save(admin);
-        } else {
+        } else if (!"ADMIN".equals(adminOpt.get().getRole())) {
             User admin = adminOpt.get();
             admin.setRole("ADMIN");
-            admin.setPassword("9480");
             userRepository.save(admin);
         }
 

@@ -126,7 +126,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="enrollment : ${enrollments}">
-                        <td th:text="${enrollment.user.username}" style="font-weight: 600;">Student</td>
+                        <td th:text="${enrollment.username}" style="font-weight: 600;">Student</td>
                         <td th:text="${enrollment.course.title}">Course</td>
                         <td>
                             <div style="background: #e2e8f0; border-radius: 9999px; height: 10px; width: 100px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 10px;">

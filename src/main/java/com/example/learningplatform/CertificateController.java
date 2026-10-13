@@ -22,8 +22,8 @@ public class CertificateController {
     }
 
     @GetMapping("/certificate/{courseId}")
-    public String viewCertificate(@PathVariable Long courseId, HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("userId");
+    public String viewCertificate(@PathVariable String courseId, HttpSession session, Model model) {
+        String userId = (String) session.getAttribute("userId");
         if (userId == null) return "redirect:/login";
 
         Optional<Course> courseOpt = courseRepository.findById(courseId);

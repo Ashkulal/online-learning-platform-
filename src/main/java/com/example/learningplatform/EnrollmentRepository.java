@@ -1,11 +1,12 @@
 package com.example.learningplatform;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface EnrollmentRepository extends JpaRepository<CourseEnrollment, Long> {
-    Optional<CourseEnrollment> findByUserIdAndCourseId(Long userId, Long courseId);
-    List<CourseEnrollment> findByUserId(Long userId);
+public interface EnrollmentRepository extends MongoRepository<CourseEnrollment, String> {
+    Optional<CourseEnrollment> findByUserIdAndCourseId(String userId, String courseId);
+    List<CourseEnrollment> findByUserId(String userId);
+    List<CourseEnrollment> findByCourseId(String courseId);
     List<CourseEnrollment> findAllByOrderByProgressPercentageDesc();
 }

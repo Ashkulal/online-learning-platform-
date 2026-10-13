@@ -16,12 +16,14 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
+                        "/",
+                        "/courses",
+                        "/course/**",
                         "/login",
                         "/signup",
                         "/css/**",
                         "/js/**",
                         "/images/**",
-                        "/h2-console/**",
                         "/error"
                 );
     }
